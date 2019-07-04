@@ -1,0 +1,35 @@
+<apex:page standardController="Product_Table__c" docType="html-5.0" extensions="ProductDetailedPageController" lightningStylesheets="true">
+	<apex:slds/>
+	<div class="slds-scope">
+		<apex:form>
+			<apex:pageBlock>
+				<apex:outputLabel styleClass="slds-align_absolute-center slds-text-heading_large" value="{!Product_Table__c.Name}"/><br/>
+				<apex:pageBlockSection showHeader="false" columns="2">
+					<apex:pageBlockSectionItem>
+						<apex:outputPanel>
+							<div class="slds-text-align_center">
+								<apex:image styleClass="slds-col slds-size_1-of-2" url="{!Product_Table__c.Image_URL__c}" />
+							</div>
+						</apex:outputPanel>
+					</apex:pageBlockSectionItem>
+					<apex:pageBlockSectionItem>
+						<apex:outputPanel>
+							<apex:outputLabel styleClass="slds-text-heading_medium" value="{!$Label.ProductDescription}"/><div/>
+							<apex:outputField value="{!Product_Table__c.Product_Description__c}"/><div/>
+							<apex:outputLabel styleClass="slds-text-heading_medium" value="{!$Label.UnitsAvailable}"/><div/>
+							<apex:outputField value="{!Product_Table__c.Units_Available__c}"/><div/>
+							<apex:outputLabel styleClass="slds-text-heading_medium" value="{!$Label.UnitPrice}"/><div/>
+							<apex:outputField value="{!Product_Table__c.Unit_Price__c}"/>
+						</apex:outputPanel>
+					</apex:pageBlockSectionItem>
+				</apex:pageBlockSection>
+				<apex:pageBlockButtons location="bottom">
+					<apex:commandButton styleClass="slds-button slds-button_outline-brand" value="{!$Label.ToShopping}" action="{!goToProductListPage}" title="{!$Label.ToShoppingLinkTitle}"/>
+					<apex:commandLink styleClass="slds-button slds-button_brand" value="{!$Label.Buy}" action="{!goToOrderDetailedPage}" title="{!$Label.BuyLinkTitle}">
+						<apex:param name="currentProductId" value="{!Product_Table__c.Id}" assignTo="{!currentProductId}"/>
+					</apex:commandLink>
+				</apex:pageBlockButtons>
+			</apex:pageBlock>
+		</apex:form>
+	</div>
+</apex:page>

@@ -1,0 +1,44 @@
+<apex:page standardController="Product_Table__c" extensions="OrderDetailedPageController" docType="html-5.0">
+	<apex:form>
+		<apex:pageBlock>
+			<apex:pageBlockSection showHeader="false" columns="2">
+				<apex:pageBlockSectionItem>
+					<apex:outputPanel>
+						<apex:outputLabel value="Contact Information"/>
+						<apex:panelGrid columns="2">
+							<apex:outputLabel value="{!$ObjectType.Contact.Fields.FirstName.Label}"/>
+							<apex:inputText value="{!contact.FirstName}"/>
+							<apex:outputLabel value="{!$ObjectType.Contact.Fields.LastName.Label}"/>
+							<apex:inputText value="{!contact.LastName}"/>
+							<apex:outputLabel value="{!$ObjectType.Contact.Fields.Email.Label}"/>
+							<apex:inputText value="{!contact.Email}"/>
+						</apex:panelGrid>
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem>
+					<apex:outputPanel>
+						<apex:outputLabel value="Product Information"/>
+						<apex:panelGrid columns="2">
+							<apex:outputLabel value="{!$ObjectType.Product_Table__c.Fields.Name.Label}"/>
+							<apex:outputField value="{!selectedProduct.Name}"/>
+							<apex:outputLabel value="{!$ObjectType.Product_Table__c.Fields.Unit_Price__c.Label}"/>
+							<apex:outputField value="{!selectedProduct.Unit_Price__c}"/>
+							<apex:outputLabel value="Unit Count"/>
+							<apex:input type="number" value="{!unitCount}" html-min="0" html-max="{!selectedProduct.Units_Available__c}">
+								<apex:actionSupport event="onchange" reRender="totalAmountField, unitsAvailableField"/>
+							</apex:input>
+							<apex:outputLabel value="Total Amount" />
+							<apex:outputText value="{0, Number, Currency}" id="totalAmountField">
+								<apex:param value="{!totalAmount}"/>
+							</apex:outputText>
+						</apex:panelGrid>
+					</apex:outputPanel>
+				</apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+			<apex:pageBlockButtons location="bottom">
+				<apex:commandButton value="{!$Label.ToShopping}" action="{!goToProductListPage}" title="{!$Label.ToShoppingLinkTitle}"/>
+				<apex:commandButton value="Buy" action="{!saveOrder}" title="Confirm order"/>
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

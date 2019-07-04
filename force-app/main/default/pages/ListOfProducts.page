@@ -1,0 +1,56 @@
+<apex:page standardController="Product_Table__c" recordSetVar="products" extensions="ListOfProductsController" lightningStylesheets="true">
+	<apex:slds/>
+	<div class="slds-scope">
+		<apex:form id="products_list">
+			<apex:pageBlock title="{!$Label.ProductList}">
+				<apex:pageBlockTable value="{!products}" var="product" styleClass="slds-scrollable_none">
+					<apex:column styleClass="slds-text-title_caps" headerValue="{!$Label.ImageURL}">
+						<apex:image url="{!product.Image_URL__c}" alt="" width="150px"/>
+					</apex:column>
+					<apex:column styleClass="slds-text-title_caps" headerValue="{!$Label.ProductTable}">
+						<apex:outputLink value="/{!product.Id}" title="{!$Label.ProductTableLinkTitle}" target="_blank">
+							<apex:outputText value="{!product.Name}"/>
+						</apex:outputLink>
+					</apex:column>
+					<apex:column headerValue="{!$Label.ProductDescription}">
+						<apex:outputText value="{!LEFT(product.Product_Description__c, 100)}..."/>
+						<apex:commandLink action="{!goToProductDetailedPage}" title="{!$Label.ProductDescriptionLinkTitle}" target="_blank">{!$Label.More}
+							<apex:param name="currentProductId" value="{!product.Id}" assignTo="{!currentProductId}"/>
+						</apex:commandLink>
+					</apex:column>
+					<apex:column headerValue="{!$Label.UnitPrice}">
+						<apex:outputField value="{!product.Unit_Price__c}"/>
+					</apex:column>
+					<apex:column>
+						<apex:commandLink styleClass="slds-button slds-button_brand" value="{!$Label.Buy}" action="{!goToOrderDetailedPage}" title="{!$Label.BuyLinkTitle}">
+							<apex:param name="currentProductId" value="{!product.Id}" assignTo="{!currentProductId}"/>
+						</apex:commandLink>
+					</apex:column>
+				</apex:pageBlockTable>
+				<div class="slds-grid">
+					<table>
+						<tr>
+							<td class="slds-col slds-size_1-of-3">
+								{!$Label.Page}<apex:outputText value="{!PageNumber} {!$Label.Of} {!CEILING(ResultSize / PageSize)}"/>
+							</td>
+							<td class="slds-col slds-size_1-of-3 slds-text-align_center">
+								<apex:commandButton styleClass="slds-button slds-button_outline-brand" action="{!First}" value="{!$Label.First}" disabled="{!!hasPrevious}"/>&nbsp; &nbsp;
+								<apex:commandButton styleClass="slds-button slds-button_outline-brand" action="{!Previous}" value="{!$Label.Previous}" disabled="{!!hasPrevious}"/>&nbsp; &nbsp;
+								<apex:commandButton styleClass="slds-button slds-button_outline-brand" action="{!Next}" value="{!$Label.Next}" disabled="{!!hasNext}"/>&nbsp;&nbsp;
+								<apex:commandButton styleClass="slds-button slds-button_outline-brand" action="{!Last}" value="{!$Label.Last}" disabled="{!!hasNext}"/>
+							</td>
+							<td class="slds-col slds-size_1-of-3 slds-text-align_right">
+								{!$Label.NumberofRecords}
+								<apex:selectList value="{!PageSize}" size="1">
+									<apex:selectOption itemValue="5" itemLabel="5"/>
+									<apex:selectOption itemValue="20" itemLabel="20"/>
+									<apex:actionSupport event="onchange" reRender="products_list"/>
+								</apex:selectList>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</apex:pageBlock>
+		</apex:form>
+	</div>
+</apex:page>
