@@ -4,6 +4,11 @@ public with sharing class OrderDetailedPageController {
 	public Product_Table__c selectedProduct { get; set; }
 	private Decimal totalAmount = 0;
 	private Integer unitsAvailable = 0;
+
+	public String errorMessage { get; set; }
+	public String inputWarningMessage { get; set; }
+	public String confirmMessage { get; set; }
+
 	public Integer unitCount { 
 		get {
 			return unitCount;
@@ -65,27 +70,40 @@ public with sharing class OrderDetailedPageController {
 				upsert contactToOrderProduct;
 				Savepoint cancelOrder = Database.setSavepoint();
 				if ((unitCount > 0) && (unitsAvailable >= 0) && (totalAmount > 0)) {
-						Order_Table__c newOrder = new Order_Table__c(
-							Product_Table__c = selectedProduct.Id,
-							Units__c = unitCount,
-							Order_Amount__c = totalAmount,
-							Contact__c = contact.Id
-						);
-						orderTableToProducts.add(newOrder);
-						insert orderTableToProducts;
-					} else {
-						Database.rollback(cancelOrder);
-					}
-					if (orderTableToProducts.size() != 0) {
-						selectedProduct.Units_Available__c = unitsAvailable;
-						update selectedProduct;
-					}	
+					Order_Table__c newOrder = new Order_Table__c(
+						Product_Table__c = selectedProduct.Id,
+						Units__c = unitCount,
+						Order_Amount__c = totalAmount,
+						Contact__c = contact.Id
+					);
+					orderTableToProducts.add(newOrder);
+					insert orderTableToProducts;
+				} else {
+					Database.rollback(cancelOrder);
+					clearPageMessages();
+					inputWarningMessage = 'Enter correct Units Available!'; // + (Integer)selectedProduct.Units_Available__c;
+					//ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Enter correct Units Available!'));
+				}
+				if (orderTableToProducts.size() != 0) {
+					selectedProduct.Units_Available__c = unitsAvailable;
+					update selectedProduct;
+					clearPageMessages();
+					confirmMessage = 'Order was saved';
+					//ApexPages.addmessage(new ApexPages.message(ApexPages.severity.CONFIRM,'You made an order!'));
+				}
 			} catch (DmlException e) {
 				Database.rollback(cancelContactUpserting);
-				ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Contact was not created! Enter correct info!'));
+				clearPageMessages();
+				errorMessage = e.getMessage();
+				//ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Please enter Account number'));
 			}
-
 		}
+	}
+	
+	private void clearPageMessages() {
+		errorMessage = '';
+		inputWarningMessage = '';
+		confirmMessage = '';
 	}
 
 	public PageReference goToProductListPage() {
