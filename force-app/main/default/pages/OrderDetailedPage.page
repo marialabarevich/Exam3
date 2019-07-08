@@ -2,17 +2,16 @@
 	<apex:slds/>
 	<div class="slds-scope">
 		<apex:form>
-			<apex:outputPanel styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" rendered="{!IF(errorMessage != NULL, true, false)}" id="errorMessage">
+			<apex:outputPanel styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" rendered="{!IF(errorMessage != NULL, true, false)}">
 				<apex:outputText value="{!errorMessage}"></apex:outputText>
 			</apex:outputPanel>
-			<apex:outputPanel styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" rendered="{!IF(inputWarningMessage != NULL, true, false)}" id="warningMessage">
+			<apex:outputPanel styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" rendered="{!IF(inputWarningMessage != NULL, true, false)}">
 				<apex:outputText value="{!inputWarningMessage}"></apex:outputText>
 			</apex:outputPanel>
-			<apex:outputPanel styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_success" rendered="{!IF(confirmMessage != NULL, true, false)}" id="successMessage">
+			<apex:outputPanel styleClass="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_success" rendered="{!IF(confirmMessage != NULL, true, false)}">
 				<apex:outputText value="{!confirmMessage}"></apex:outputText>
 			</apex:outputPanel>
 			<apex:pageBlock>
-				
 				<apex:pageBlockSection showHeader="false" columns="2">
 					<apex:pageBlockSectionItem>
 						<apex:outputPanel>
@@ -49,10 +48,9 @@
 				</apex:pageBlockSection>
 				<apex:pageBlockButtons location="bottom">
 					<apex:commandButton styleClass="slds-button slds-button_outline-brand" value="{!$Label.ToShopping}" action="{!goToProductListPage}" title="{!$Label.ToShoppingLinkTitle}"/>
-					<apex:commandButton styleClass="slds-button slds-button_brand" value="{!$Label.Buy}" action="{!saveOrder}" title="{!$Label.ConfirmOrder}"/>
+					<apex:commandLink styleClass="slds-button slds-button_brand" value="{!$Label.Buy}" action="{!saveOrder}" title="{!$Label.ConfirmOrder}"/>
 				</apex:pageBlockButtons>
 			</apex:pageBlock>
 		</apex:form>
 	</div>
-	
 </apex:page>

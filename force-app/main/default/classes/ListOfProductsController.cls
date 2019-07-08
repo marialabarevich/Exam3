@@ -12,7 +12,7 @@ public with sharing class ListOfProductsController {
 	public PageReference goToOrderDetailedPage() {
 		PageReference orderPage = Page.OrderDetailedPage;
 		orderPage.getParameters().put('Id', currentProductId);
-		orderPage.setRedirect(true);
+		//orderPage.setRedirect(true);
 		return orderPage;
 	}
 

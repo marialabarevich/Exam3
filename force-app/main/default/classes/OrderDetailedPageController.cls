@@ -4,7 +4,6 @@ public with sharing class OrderDetailedPageController {
 	public Product_Table__c selectedProduct { get; set; }
 	private Decimal totalAmount = 0;
 	private Integer unitsAvailable = 0;
-
 	public String errorMessage { get; set; }
 	public String inputWarningMessage { get; set; }
 	public String confirmMessage { get; set; }
@@ -20,6 +19,7 @@ public with sharing class OrderDetailedPageController {
 			}
 		}
 	}
+
 	public Decimal getUnitsAvailable() {
 		if (unitCount > 0) {
 			unitsAvailable = (Integer)selectedProduct.Units_Available__c - unitCount;
@@ -28,6 +28,7 @@ public with sharing class OrderDetailedPageController {
 		}
 		return unitsAvailable;
 	}
+
 	public Decimal getTotalAmount() {
 		if (unitCount > 0) {
 			totalAmount = unitCount * (Decimal)selectedProduct.Unit_Price__c;
@@ -69,6 +70,7 @@ public with sharing class OrderDetailedPageController {
 			try {
 				upsert contactToOrderProduct;
 				Savepoint cancelOrder = Database.setSavepoint();
+				getUnitsAvailable();
 				if ((unitCount > 0) && (unitsAvailable >= 0) && (totalAmount > 0)) {
 					Order_Table__c newOrder = new Order_Table__c(
 						Product_Table__c = selectedProduct.Id,
@@ -81,22 +83,22 @@ public with sharing class OrderDetailedPageController {
 				} else {
 					Database.rollback(cancelOrder);
 					clearPageMessages();
-					inputWarningMessage = 'Enter correct Units Available!'; // + (Integer)selectedProduct.Units_Available__c;
-					//ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Enter correct Units Available!'));
+					inputWarningMessage = System.Label.ErrorUnitsAvailable;
 				}
 				if (orderTableToProducts.size() != 0) {
 					selectedProduct.Units_Available__c = unitsAvailable;
 					update selectedProduct;
 					clearPageMessages();
-					confirmMessage = 'Order was saved';
-					//ApexPages.addmessage(new ApexPages.message(ApexPages.severity.CONFIRM,'You made an order!'));
+					confirmMessage = System.Label.SuccessfulOrder;
 				}
 			} catch (DmlException e) {
 				Database.rollback(cancelContactUpserting);
 				clearPageMessages();
-				errorMessage = e.getMessage();
-				//ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Please enter Account number'));
-			}
+				errorMessage = System.Label.ErrorLastName;
+				}
+		} else {
+			clearPageMessages();
+			inputWarningMessage = System.Label.ErrorEmail;
 		}
 	}
 	
